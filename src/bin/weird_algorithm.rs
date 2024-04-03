@@ -7,6 +7,7 @@
 use cses::solutions::weird_algorithm::solve;
 use cses::utils::io::{get_int, vector_to_string};
 
+/// Driver for the solution to the "Weird Algorithm" problem https://cses.fi/problemset/task/1068
 fn main() {
     let n: u64 = get_int();
     let v: Vec<u64> = solve(n);

@@ -8,6 +8,9 @@ use std::{any, fs};
 use std::io::{BufReader, Read};
 use std::str::{FromStr, SplitAsciiWhitespace};
 
+/// Reads a line from standard input and parses it into a type T.
+/// # Panics
+/// If the input cannot be parsed into type T.
 pub fn get_int<T: FromStr>() -> T {
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).unwrap();
@@ -48,6 +51,10 @@ pub fn string_to_vector<T: FromStr>(input: String) -> Vec<T> {
         .collect()
 }
 
+/// Converts a vector of type T to a string.
+/// # Arguments
+/// * `v` - A vector of type T.
+/// * `sep` - An optional separator string.
 pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
 where
     T: ToString,
