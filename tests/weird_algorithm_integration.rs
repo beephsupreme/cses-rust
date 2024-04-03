@@ -18,7 +18,7 @@ fn integration_01() {
         info!("{}: {}", i + 1, questions[i]);
         let a = file_to_string(&answers[i]);
         let n: u64 = file_to_int(&questions[i]);
-        let r: String = vector_to_string(weird_algorithm::solve(n), Some(" "));
+        let r: String = vector_to_string(weird_algorithm::solve(n).unwrap(), Some(" "));
         assert_eq!(a, r);
     });
 }

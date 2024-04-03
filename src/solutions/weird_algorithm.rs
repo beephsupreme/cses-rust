@@ -4,9 +4,20 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
-use super::super::utils::error::CsesError;
+use thiserror::Error;
 
+/// Custom error type for the Weird Algorithm problem.
+#[derive(Debug, Error)]
+#[non_exhaustive]
+pub enum WeirdError {
+    #[error("n = {0} but expected 1 <= n <= 1_000_000")]
+    InvalidInput(String),
+}
+
+/// Lower-bound for the input value.
 const LBOUND: u64 = 1;
+
+/// Upper-bound for the input value.
 const UBOUND: u64 = 1_000_000;
 
 /// # Weird Algorithm
@@ -22,9 +33,9 @@ const UBOUND: u64 = 1_000_000;
 /// # Performance
 /// The time complexity of this solution is O(n).
 /// The space complexity of this solution is O(1) because the vector is pre-allocated. Otherwise, it would be O(n).
-pub fn solve(mut n: u64) -> Result<Vec<u64>, CsesError> {
+pub fn solve(mut n: u64) -> Result<Vec<u64>, WeirdError> {
     if !(LBOUND..=UBOUND).contains(&n) {
-        return Err(CsesError::new("n should be 1 <= n <= 1e6"));
+        return Err(WeirdError::InvalidInput(n.to_string()));
     }
     let mut v: Vec<u64> = Vec::with_capacity(4096);
     loop {
@@ -50,28 +61,28 @@ mod tests {
     fn unit_01() {
         let input: u64 =1;
         let expected: Vec<u64> = vec![1];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 
     #[test]
     fn unit_02() {
         let input: u64 = 2;
         let expected: Vec<u64> = vec![2, 1];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 
     #[test]
     fn unit_03() {
         let input: u64 = 3;
         let expected: Vec<u64> = vec![3, 10, 5, 16, 8, 4, 2, 1];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 
     #[test]
     fn unit_04() {
         let input: u64 = 4;
         let expected: Vec<u64> = vec![4, 2, 1];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 
     #[test]
@@ -80,13 +91,13 @@ mod tests {
         let expected: Vec<u64> = vec![
             15, 46, 23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1,
         ];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 
     #[test]
     fn unit_06() {
         let input: u64 = 23;
         let expected: Vec<u64> = vec![23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1];
-        assert_eq!(solve(input), expected);
+        assert_eq!(solve(input).unwrap(), expected);
     }
 }

@@ -8,7 +8,7 @@ use cses::solutions::missing_number::solve;
 use cses::utils::io::{get_int, get_vector};
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let v: Vec<u64> = get_vector();
     println!("{}", solve(n, v));
 }

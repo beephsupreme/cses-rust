@@ -8,17 +8,34 @@ use std::{any, fs};
 use std::io::{BufReader, Read};
 use std::str::{FromStr, SplitAsciiWhitespace};
 
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+#[non_exhaustive]
+pub enum IoError {
+    #[error("Invalid input: {0}")]
+    InvalidInput(String),
+    #[error("IO error!")]
+    IoError,
+    #[error("Parse error!")]
+    ParseError,
+}
+
 /// Reads a line from standard input and parses it into a type T.
-/// # Panics
-/// If the input cannot be parsed into type T.
-pub fn get_int<T: FromStr>() -> T {
+/// # Returns
+/// The result of parsing the input into a type T or an error.
+pub fn get_int<T: FromStr>() -> Result<T, IoError> {
     let mut input = String::new();
-    std::io::stdin().read_line(&mut input).unwrap();
-    input
+    match std::io::stdin().read_line(&mut input) {
+        Ok(_) => (),
+        Err(_) => return Err(IoError::IoError),
+    }
+    match input
         .trim()
-        .parse::<T>()
-        .ok()
-        .unwrap_or_else(|| panic!("get_int: parse fail"))
+        .parse::<T>() {
+        Ok(v) => Ok(v),
+        Err(_) => Err(IoError::ParseError),
+    }
 }
 
 pub fn get_vector<T: FromStr>() -> Vec<T> {

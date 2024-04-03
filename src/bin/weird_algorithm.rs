@@ -9,10 +9,13 @@ use cses::utils::io::{get_int, vector_to_string};
 
 /// Driver for the "Weird Algorithm" problem https://cses.fi/problemset/task/1068
 fn main() {
-    let n: u64 = get_int();
-    let v= solve(n);
-    match v {
-        Ok(v) => println!("{} ", vector_to_string(v, Some(" "))),
+    match get_int::<u64>() {
+        Ok(n) => {
+            match solve(n) {
+                Ok(v) => println!("{} ", vector_to_string(v, Some(" "))),
+                Err(e) => eprintln!("{}", e),
+            }
+        },
         Err(e) => eprintln!("{}", e),
     }
 }

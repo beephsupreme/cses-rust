@@ -6,4 +6,3 @@
 
 pub mod integration_setup;
 pub mod io;
-pub mod error;
