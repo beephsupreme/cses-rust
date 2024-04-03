@@ -1,0 +1,79 @@
+[package]
+name = "cses"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+log = "0.4.21"
+env_logger = "0.11.3"
+
+[dev-dependencies]
+criterion = { version = "0.5.1", features = ["html_reports"] }
+
+[[bench]]
+name = "apple_division_bench"
+harness = false
+
+[[bench]]
+name = "bit_strings_bench"
+harness = false
+
+[[bench]]
+name = "coin_piles_bench"
+harness = false
+
+[[bench]]
+name = "chessboard_and_queens_bench"
+harness = false
+
+[[bench]]
+name = "creating_strings_bench"
+harness = false
+
+[[bench]]
+name = "gray_code_bench"
+harness = false
+
+[[bench]]
+name = "increasing_array_bench"
+harness = false
+
+[[bench]]
+name = "missing_number_bench"
+harness = false
+
+[[bench]]
+name = "number_spiral_bench"
+harness = false
+
+[[bench]]
+name = "palindrome_reorder_bench"
+harness = false
+
+[[bench]]
+name = "permutations_bench"
+harness = false
+
+[[bench]]
+name = "repetitions_bench"
+harness = false
+
+[[bench]]
+name = "tower_of_hanoi_bench"
+harness = false
+
+[[bench]]
+name = "trailing_zeros_bench"
+harness = false
+
+[[bench]]
+name = "two_knights_bench"
+harness = false
+
+[[bench]]
+name = "two_sets_bench"
+harness = false
+
+[[bench]]
+name = "weird_algorithm_bench"
+harness = false
