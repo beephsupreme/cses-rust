@@ -8,7 +8,7 @@ use cses::solutions::trailing_zeros::solve;
 use cses::utils::io::get_int;
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let r = solve(n);
     println!("{}", r);
 }

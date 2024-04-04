@@ -8,7 +8,7 @@ use cses::solutions::gray_code::solve;
 use cses::utils::io::{get_int, vector_to_string};
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let r: Vec<String> = solve(n);
     print!("{}", vector_to_string(r, Some("\n")));
 }

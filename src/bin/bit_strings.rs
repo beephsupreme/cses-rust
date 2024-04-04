@@ -8,7 +8,7 @@ use cses::solutions::bit_strings::solve;
 use cses::utils::io::get_int;
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let r: u64 = solve(n);
     println!("{}", r);
 }

@@ -8,7 +8,7 @@ use cses::solutions::tower_of_hanoi::solve;
 use cses::utils::io::get_int;
 
 fn main() {
-    let n: u8 = get_int();
+    let n: u8 = get_int().unwrap();
     let v: Vec<(u8, u8)> = solve(n);
     println!("{}", v.len());
     v.into_iter().for_each(|(a, b)| println!("{} {}", a, b));

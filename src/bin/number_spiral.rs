@@ -8,7 +8,7 @@ use cses::solutions::number_spiral::solve;
 use cses::utils::io::{get_int, get_tuple_vector, vector_to_string};
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let v: Vec<(u64, u64)> = get_tuple_vector(n);
     let u: Vec<u64> = solve(n, v);
     print!("{}", vector_to_string(u, Some("\n")));

@@ -8,7 +8,7 @@ use cses::solutions::permutations::solve;
 use cses::utils::io::get_int;
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let s: String = solve(n);
     println!("{}", s);
 }

@@ -8,7 +8,7 @@ use cses::solutions::apple_division::solve;
 use cses::utils::io::{get_int, get_vector};
 
 fn main() {
-    let n: usize = get_int();
+    let n: usize = get_int().unwrap();
     let v: Vec<usize> = get_vector();
     println!("{}", solve(n, v));
 }

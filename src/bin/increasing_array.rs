@@ -8,7 +8,7 @@ use cses::solutions::increasing_array::solve;
 use cses::utils::io::{get_int, get_vector};
 
 fn main() {
-    let _: u64 = get_int();
+    let _: u64 = get_int().unwrap();
     let v: Vec<u64> = get_vector();
     println!("{}", solve(v))
 }

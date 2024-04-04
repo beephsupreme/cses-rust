@@ -10,7 +10,7 @@ use cses::solutions::weird_algorithm::solve;
 
 pub fn weird_algorithm_bench(c: &mut Criterion) {
     c.bench_function("weird_algorithm::solve(7)", |b| {
-        b.iter(|| solve(black_box(7)))
+        b.iter(|| solve(black_box(7)).unwrap())
     });
 }
 

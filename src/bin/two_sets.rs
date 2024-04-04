@@ -10,7 +10,7 @@ use cses::solutions::two_sets::solve;
 use cses::utils::io::get_int;
 
 fn main() {
-    let n: u64 = get_int();
+    let n: u64 = get_int().unwrap();
     let mut output = String::with_capacity(6888916);
     match solve(n) {
         Some((a, b)) => {
