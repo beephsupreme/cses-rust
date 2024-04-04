@@ -9,6 +9,6 @@ use cses::utils::io::{get_int, get_vector};
 
 fn main() {
     let n: usize = get_int().unwrap();
-    let v: Vec<usize> = get_vector();
+    let v: Vec<usize> = get_vector().unwrap();
     println!("{}", solve(n, v));
 }

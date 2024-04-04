@@ -22,7 +22,6 @@ const UBOUND: u64 = 1_000_000;
 
 /// # Weird Algorithm
 /// The problem is described in more detail at https://cses.fi/problemset/task/1068.
-/// Start with an integer n and continue the algorithm until n = 1:
 ///
 /// # Parameters
 /// A positive number n is the starting point of the algorithm.

@@ -22,6 +22,6 @@ fn integration_01() {
         let mut tokens = q.split_ascii_whitespace();
         let n: u64 = tokens.next().unwrap().parse().unwrap();
         let v: Vec<u64> = tokens.map(|s| s.parse().unwrap()).collect();
-        assert_eq!(solve(n, v), a);
+        assert_eq!(solve(n, v).unwrap(), a);
     });
 }

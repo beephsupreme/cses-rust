@@ -8,7 +8,22 @@ use cses::solutions::missing_number::solve;
 use cses::utils::io::{get_int, get_vector};
 
 fn main() {
-    let n: u64 = get_int().unwrap();
-    let v: Vec<u64> = get_vector();
-    println!("{}", solve(n, v));
+    let n: u64 = match get_int() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("{}", e);
+            return;
+        }
+    };
+    let v: Vec<u64> = match get_vector() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("{}", e);
+            return;
+        }
+    };
+    match solve(n, v) {
+        Ok(v) => println!("{}", v),
+        Err(e) => eprintln!("{}", e),
+    }
 }

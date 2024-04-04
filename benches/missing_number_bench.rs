@@ -10,7 +10,7 @@ use cses::solutions::missing_number::solve;
 
 pub fn missing_number_bench(c: &mut Criterion) {
     c.bench_function("missing_number(5, vec![1, 2, 4, 5])", |b| {
-        b.iter(|| solve(black_box(5), vec![1, 2, 4, 5]))
+        b.iter(|| solve(black_box(5), vec![1, 2, 4, 5]).unwrap())
     });
 }
 

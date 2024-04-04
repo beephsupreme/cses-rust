@@ -47,27 +47,15 @@ pub fn get_vector<T: FromStr>() -> Result<Vec<T>, IoError> {
         Ok(_) => (),
         Err(_) => return Err(IoError::IoError),
     }
-
-    let  v = match input.split_ascii_whitespace() {
-        Some(v) => v,
-        None => return Err(IoError::InvalidInput(input)),
-    };
-
-    let k = v.map(|s| {
-        s.parse::<T>()
-    }).collect::<Result<Vec<T>, _>>();
-    !todo!()
-
-
-
-    // input
-    //     .split_ascii_whitespace()
-    //     .map(|s| {
-    //         s.parse::<T>()
-    //             .ok()
-    //             .unwrap_or_else(|| panic!("get_vector: parse fail"))
-    //     })
-    //     .collect()
+    let mut v: Vec<T> = Vec::new();
+    let tokens = input.split_ascii_whitespace();
+    for token in tokens {
+        match token.parse::<T>() {
+            Ok(k) => v.push(k),
+            Err(_) => return Err(IoError::ParseError),
+        }
+    }
+    Ok(v)
 }
 
 pub fn get_string() -> String {
@@ -92,8 +80,8 @@ pub fn string_to_vector<T: FromStr>(input: String) -> Vec<T> {
 /// * `v` - A vector of type T.
 /// * `sep` - An optional separator string.
 pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
-where
-    T: ToString,
+    where
+        T: ToString,
 {
     match sep {
         Some(sep) => v
@@ -196,7 +184,6 @@ pub fn load_tokens(b: &mut String) -> SplitAsciiWhitespace {
 }
 
 #[cfg(test)]
-
 mod tests {
     use super::*;
 
@@ -211,5 +198,14 @@ mod tests {
     fn test_vector_to_string() {
         let v = vec!['a', 'b', 'c', 'd', 'e'];
         assert_eq!("a, b, c, d, e".to_string(), vector_to_string(v, Some(", ")));
+    }
+
+    #[test]
+    fn test_get_vector() {
+        // let input = "1 2 3 4 5\n".to_string();
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+        let expected = vec![1, 2, 3, 4, 5];
+        assert_eq!(get_vector::<u64>().unwrap(), expected);
     }
 }
