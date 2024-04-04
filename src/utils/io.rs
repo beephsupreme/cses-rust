@@ -38,17 +38,36 @@ pub fn get_int<T: FromStr>() -> Result<T, IoError> {
     }
 }
 
-pub fn get_vector<T: FromStr>() -> Vec<T> {
+/// Reads a line from standard input and parses it into a vector of type T.
+/// # Returns
+/// The result of parsing the input into a vector of type T or an error.
+pub fn get_vector<T: FromStr>() -> Result<Vec<T>, IoError> {
     let mut input = String::new();
-    std::io::stdin().read_line(&mut input).unwrap();
-    input
-        .split_ascii_whitespace()
-        .map(|s| {
-            s.parse::<T>()
-                .ok()
-                .unwrap_or_else(|| panic!("get_vector: parse fail"))
-        })
-        .collect()
+    match std::io::stdin().read_line(&mut input) {
+        Ok(_) => (),
+        Err(_) => return Err(IoError::IoError),
+    }
+
+    let  v = match input.split_ascii_whitespace() {
+        Some(v) => v,
+        None => return Err(IoError::InvalidInput(input)),
+    };
+
+    let k = v.map(|s| {
+        s.parse::<T>()
+    }).collect::<Result<Vec<T>, _>>();
+    !todo!()
+
+
+
+    // input
+    //     .split_ascii_whitespace()
+    //     .map(|s| {
+    //         s.parse::<T>()
+    //             .ok()
+    //             .unwrap_or_else(|| panic!("get_vector: parse fail"))
+    //     })
+    //     .collect()
 }
 
 pub fn get_string() -> String {
