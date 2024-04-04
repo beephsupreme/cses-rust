@@ -8,7 +8,7 @@ use cses::solutions::creating_strings::solve;
 use cses::utils::io::{get_string, vector_to_string};
 
 fn main() {
-    let s: String = get_string();
+    let s: String = get_string().unwrap();
     let r: Vec<String> = solve(s);
     println!("{}", r.len());
     print!("{}", vector_to_string(r, Some("\n")));

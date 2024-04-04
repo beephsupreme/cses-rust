@@ -8,7 +8,7 @@ use cses::solutions::repetitions::solve;
 use cses::utils::io::get_string;
 
 fn main() {
-    let s: String = get_string();
+    let s: String = get_string().unwrap();
     let n: u64 = solve(s);
     println!("{}", n);
 }

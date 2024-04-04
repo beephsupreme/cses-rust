@@ -8,7 +8,7 @@ use cses::solutions::palindrome_reorder::solve;
 use cses::utils::io::get_string;
 
 fn main() {
-    let s = get_string();
+    let s = get_string().unwrap();
     let r = solve(s);
     match r {
         Some(x) => println!("{}", x),

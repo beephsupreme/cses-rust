@@ -42,7 +42,7 @@ pub fn get_int<T: FromStr>() -> Result<T, IoError> {
 /// # Returns
 /// The result of parsing the input into a vector of type T or an error.
 pub fn get_vector<T: FromStr>() -> Result<Vec<T>, IoError> {
-    let mut input = String::with_capacity(256000);
+    let mut input = String::with_capacity(4096);
     match std::io::stdin().read_line(&mut input) {
         Ok(_) => (),
         Err(_) => return Err(IoError::IoError),
@@ -58,10 +58,17 @@ pub fn get_vector<T: FromStr>() -> Result<Vec<T>, IoError> {
     Ok(v)
 }
 
-pub fn get_string() -> String {
+/// # Get String
+/// Reads a line from standard input and returns a string.
+///
+/// # Returns
+/// A Result contining a trimmed string or an error.
+pub fn get_string() -> Result<String, IoError> {
     let mut input = String::new();
-    std::io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_string()
+    match std::io::stdin().read_line(&mut input) {
+        Ok(_) => Ok(input.trim().to_string()),
+        Err(_) => return Err(IoError::IoError),
+    }
 }
 
 pub fn string_to_vector<T: FromStr>(input: String) -> Vec<T> {
