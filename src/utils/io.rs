@@ -11,6 +11,25 @@ use anyhow::{bail, Context, Result};
 use crate::utils::error::CsesError;
 
 
+
+/// Reads a line with a BufReader and returns a vector of bytes.
+/// # Arguments
+/// * `reader` - A BufReader.
+/// # Returns
+/// * `Result` containing a Vec<u8> or an error.
+/// # Examples
+///```no_run
+///
+/// let reader = std::io::BufReader::new(std::io::stdin());
+/// let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
+///
+/// let reader = std::io::Cursor::new("42");
+/// let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
+///
+///  let f = std::fs::File::open("path/filename.txt").unwrap();
+///  let reader = std::io::BufReader::new(f);
+///  let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
+///```
 pub fn get_bytes<R>(mut reader: R) -> Result<Vec<u8>>
     where R: std::io::BufRead {
     let mut input = String::new();
