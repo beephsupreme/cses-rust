@@ -17,10 +17,10 @@ use crate::utils::error::CsesError;
 /// The result of parsing the input into a type T or an error.
 pub fn get_int<T: FromStr>() -> Result<T> {
     let mut input = String::with_capacity(16);
-    std::io::stdin().read_line(&mut input).context("get_int(): Could not read from stdin")?;
+    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_int: Could not read from stdin")?;
     match input.trim().parse::<T>() {
         Ok(r) => Ok(r),
-        Err(_) => bail!(CsesError::ParseError(input)),
+        Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_vector: {}", input))),
     }
 }
 
@@ -30,13 +30,13 @@ pub fn get_int<T: FromStr>() -> Result<T> {
 /// The result of parsing the input into a vector of type T or an error.
 pub fn get_vector<T: FromStr>() -> Result<Vec<T>> {
     let mut input = String::with_capacity(4096);
-    std::io::stdin().read_line(&mut input).context("get_vector(): Could not read from stdin")?;
+    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_vector: Could not read from stdin")?;
     let mut v: Vec<T> = Vec::new();
     let tokens = input.split_ascii_whitespace();
     for token in tokens {
         match token.parse::<T>() {
             Ok(k) => v.push(k),
-            Err(_) => bail!(CsesError::ParseError(token.to_string())),
+            Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_vector: {}", token.to_string()))),
         }
     }
     Ok(v)
@@ -48,7 +48,7 @@ pub fn get_vector<T: FromStr>() -> Result<Vec<T>> {
 /// A Result contining a trimmed string or an error.
 pub fn get_string() -> Result<String> {
     let mut input = String::new();
-    std::io::stdin().read_line(&mut input).context("get_string(): Could not read from stdin")?;
+    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_string: Could not read from stdin")?;
     Ok(input.trim().to_string())
 }
 
@@ -64,7 +64,7 @@ pub fn string_to_vector<T: FromStr>(input: String) -> Result<Vec<T>> {
     for token in tokens {
         match token.parse::<T>() {
             Ok(k) => v.push(k),
-            Err(_) => bail!(CsesError::ParseError(token.to_string())),
+            Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::string_to_vector: {}", token.to_string()))),
         }
     }
     Ok(v)
