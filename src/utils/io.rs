@@ -8,84 +8,75 @@ use std::{any, fs};
 use std::io::{BufReader, Read};
 use std::str::{FromStr, SplitAsciiWhitespace};
 
-use thiserror::Error;
+use anyhow::{bail, Context, Result};
+use crate::utils::error::CsesError;
 
-#[derive(Debug, Error)]
-#[non_exhaustive]
-pub enum IoError {
-    #[error("Invalid input: {0}")]
-    InvalidInput(String),
-    #[error("IO error!")]
-    IoError,
-    #[error("Parse error!")]
-    ParseError,
-}
-
+/// # get_int()
 /// Reads a line from standard input and parses it into a type T.
 /// # Returns
 /// The result of parsing the input into a type T or an error.
-pub fn get_int<T: FromStr>() -> Result<T, IoError> {
+pub fn get_int<T: FromStr>() -> Result<T> {
     let mut input = String::with_capacity(16);
-    match std::io::stdin().read_line(&mut input) {
-        Ok(_) => (),
-        Err(_) => return Err(IoError::IoError),
-    }
-    match input
-        .trim()
-        .parse::<T>() {
-        Ok(v) => Ok(v),
-        Err(_) => Err(IoError::ParseError),
+    std::io::stdin().read_line(&mut input).context("get_int(): Could not read from stdin")?;
+    match input.trim().parse::<T>() {
+        Ok(r) => Ok(r),
+        Err(_) => bail!(CsesError::ParseError(input)),
     }
 }
 
+/// # get_vector()
 /// Reads a line from standard input and parses it into a vector of type T.
 /// # Returns
 /// The result of parsing the input into a vector of type T or an error.
-pub fn get_vector<T: FromStr>() -> Result<Vec<T>, IoError> {
+pub fn get_vector<T: FromStr>() -> Result<Vec<T>> {
     let mut input = String::with_capacity(4096);
-    match std::io::stdin().read_line(&mut input) {
-        Ok(_) => (),
-        Err(_) => return Err(IoError::IoError),
-    }
+    std::io::stdin().read_line(&mut input).context("get_vector(): Could not read from stdin")?;
     let mut v: Vec<T> = Vec::new();
     let tokens = input.split_ascii_whitespace();
     for token in tokens {
         match token.parse::<T>() {
             Ok(k) => v.push(k),
-            Err(_) => return Err(IoError::ParseError),
+            Err(_) => bail!(CsesError::ParseError(token.to_string())),
         }
     }
     Ok(v)
 }
 
-/// # Get String
+/// # get_string()
 /// Reads a line from standard input and returns a string.
-///
 /// # Returns
 /// A Result contining a trimmed string or an error.
-pub fn get_string() -> Result<String, IoError> {
+pub fn get_string() -> Result<String> {
     let mut input = String::new();
-    match std::io::stdin().read_line(&mut input) {
-        Ok(_) => Ok(input.trim().to_string()),
-        Err(_) => return Err(IoError::IoError),
+    std::io::stdin().read_line(&mut input).context("get_string(): Could not read from stdin")?;
+    Ok(input.trim().to_string())
+}
+
+/// # string_to_vector()
+/// Converts a string into a vector of type T.
+/// # Arguments
+/// * `input` - A string to be converted into a vector of type T.
+/// # Returns
+/// A Result containing a vector of type T or an error.
+pub fn string_to_vector<T: FromStr>(input: String) -> Result<Vec<T>> {
+    let mut tokens = input.split_ascii_whitespace();
+    let mut v: Vec<T> = Vec::new();
+    for token in tokens {
+        match token.parse::<T>() {
+            Ok(k) => v.push(k),
+            Err(_) => bail!(CsesError::ParseError(token.to_string())),
+        }
     }
+    Ok(v)
 }
 
-pub fn string_to_vector<T: FromStr>(input: String) -> Vec<T> {
-    input
-        .split_ascii_whitespace()
-        .map(|s| {
-            s.parse::<T>()
-                .ok()
-                .unwrap_or_else(|| panic!("string_to_vector: parse fail"))
-        })
-        .collect()
-}
-
+/// # vector_to_string()
 /// Converts a vector of type T to a string.
 /// # Arguments
 /// * `v` - A vector of type T.
 /// * `sep` - An optional separator string.
+/// # Returns
+/// A string containing the elements of the vector separated by the separator.
 pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
     where
         T: ToString,
@@ -100,6 +91,12 @@ pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
     }
 }
 
+/// # get_tuple_vector()
+/// Reads n lines from standard input and parses them into a vector of tuples of type (u64, u64).
+/// # Arguments
+/// * `n` - The number of lines to read.
+/// # Returns
+/// A Result containing a vector of tuples of type (u64, u64) or an error.
 pub fn get_tuple_vector(n: u64) -> Vec<(u64, u64)> {
     (0..n)
         .map(|_| {
@@ -114,6 +111,10 @@ pub fn get_tuple_vector(n: u64) -> Vec<(u64, u64)> {
         .collect()
 }
 
+/// # get_vector_vector_bool()
+/// Reads 8 lines from standard input and parses them into a vector of vectors of bool.
+/// # Returns
+/// A Result containing a vector of vectors of bool or an error.
 pub fn get_vector_vector_bool() -> Vec<Vec<bool>> {
     let mut v: Vec<Vec<bool>> = Vec::new();
     let mut b: Vec<bool> = Vec::new();
@@ -130,6 +131,12 @@ pub fn get_vector_vector_bool() -> Vec<Vec<bool>> {
     v
 }
 
+/// # file_to_vector_vector_bool()
+/// Reads a file and parses it into a vector of vectors of bool.
+/// # Arguments
+/// * `path` - A string representing the path to the file.
+/// # Returns
+/// A Result containing a vector of vectors of bool or an error.
 pub fn file_to_vector_vector_bool(path: &str) -> Vec<Vec<bool>> {
     let mut v: Vec<Vec<bool>> = Vec::new();
     let mut b: Vec<bool> = Vec::new();
@@ -145,10 +152,22 @@ pub fn file_to_vector_vector_bool(path: &str) -> Vec<Vec<bool>> {
     v
 }
 
+/// # file_to_string()
+/// Reads a file and returns a string.
+/// # Arguments
+/// * `path` - A string representing the path to the file.
+/// # Returns
+/// A Result containing a string or an error.
 pub fn file_to_string(path: &str) -> String {
     fs::read_to_string(path).unwrap().trim().to_string()
 }
 
+/// # file_to_vector()
+/// Reads a file and parses it into a vector of type T.
+/// # Arguments
+/// * `path` - A string representing the path to the file.
+/// # Returns
+/// A Result containing a vector of type T or an error.
 pub fn file_to_vector<T: FromStr>(path: &str) -> Vec<T> {
     fs::read_to_string(path)
         .unwrap()
@@ -161,6 +180,12 @@ pub fn file_to_vector<T: FromStr>(path: &str) -> Vec<T> {
         .collect()
 }
 
+/// # file_to_int()
+/// Reads a file and parses it into a type T.
+/// # Arguments
+/// * `path` - A string representing the path to the file.
+/// # Returns
+/// A Result containing a type T or an error.
 pub fn file_to_int<T: FromStr>(path: &str) -> T {
     fs::read_to_string(path)
         .unwrap()
@@ -170,6 +195,12 @@ pub fn file_to_int<T: FromStr>(path: &str) -> T {
         .unwrap_or_else(|| panic!("file_to_int: parse fail"))
 }
 
+/// # get_token()
+/// Parses a token into a type T.
+/// # Arguments
+/// * `tokens` - A mutable reference to a SplitAsciiWhitespace.
+/// # Returns
+/// A Result containing a type T or an error.
 #[allow(clippy::expect_fun_call)]
 pub fn get_token<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> T {
     if let Some(token) = tokens.next() {
@@ -182,6 +213,12 @@ pub fn get_token<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> T {
     }
 }
 
+/// # load_tokens()
+/// Reads from standard input and returns a SplitAsciiWhitespace.
+/// # Arguments
+/// * `b` - A mutable reference to a string.
+/// # Returns
+/// A Result containing a SplitAsciiWhitespace or an error.
 pub fn load_tokens(b: &mut String) -> SplitAsciiWhitespace {
     let mut reader = BufReader::new(std::io::stdin());
     reader
