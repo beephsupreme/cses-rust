@@ -3,24 +3,32 @@
  * Licensed under the MIT license (http://opensource.org/licenses/MIT)
  * This file may not be copied, modified, or distributed except according to those terms.
  */
-
 use std::{any, fs};
-use std::io::{BufReader, Read};
+use std::io::{BufReader, Read, Write};
 use std::str::{FromStr, SplitAsciiWhitespace};
 
 use anyhow::{bail, Context, Result};
 use crate::utils::error::CsesError;
 
+
+pub fn get_bytes<R>(mut reader: R) -> Result<Vec<u8>>
+    where R: std::io::BufRead {
+    let mut input = String::new();
+    let mut output: Vec<u8> = Vec::new();
+    reader.read_line(&mut input)?;
+    write!(output, "{}", input)?;
+    Ok(output)
+}
+
 /// # get_int()
 /// Reads a line from standard input and parses it into a type T.
 /// # Returns
 /// The result of parsing the input into a type T or an error.
-pub fn get_int<T: FromStr>() -> Result<T> {
-    let mut input = String::with_capacity(16);
-    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_int: Could not read from stdin")?;
-    match input.trim().parse::<T>() {
+pub fn get_int<T: FromStr>(v: Vec<u8>) -> Result<T> {
+    let s = String::from_utf8(v)?;
+    match s.trim().parse::<T>() {
         Ok(r) => Ok(r),
-        Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_vector: {}", input))),
+        Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_int({:?})", s))),
     }
 }
 
@@ -59,7 +67,7 @@ pub fn get_string() -> Result<String> {
 /// # Returns
 /// A Result containing a vector of type T or an error.
 pub fn string_to_vector<T: FromStr>(input: String) -> Result<Vec<T>> {
-    let mut tokens = input.split_ascii_whitespace();
+    let tokens = input.split_ascii_whitespace();
     let mut v: Vec<T> = Vec::new();
     for token in tokens {
         match token.parse::<T>() {

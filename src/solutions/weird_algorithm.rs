@@ -4,6 +4,7 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
+use std::io;
 use thiserror::Error;
 
 /// Custom error type for the Weird Algorithm problem.
@@ -54,7 +55,17 @@ pub fn solve(mut n: u64) -> Result<Vec<u64>, WeirdError> {
 #[cfg(test)]
 
 mod tests {
+    use crate::utils::io::{get_bytes, get_int};
     use super::*;
+
+    #[test]
+    fn unit_00() {
+        let reader = io::Cursor::new("4\n");
+        let input = get_bytes(reader).unwrap();
+        let n: u64 = get_int(input).unwrap();
+        let expected: Vec<u64> = vec![4, 2, 1];
+        assert_eq!(solve(n).unwrap(), expected);
+    }
 
     #[test]
     fn unit_01() {
