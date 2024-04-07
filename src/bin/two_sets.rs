@@ -6,12 +6,16 @@
 
 use std::fmt::Write;
 
-use cses::solutions::two_sets::solve;
-use cses::utils::io::get_int;
+use anyhow::{Error, Result};
 
-fn main() {
-    let n: u64 = get_int().unwrap();
-    let mut output = String::with_capacity(6888916);
+use cses::solutions::two_sets::solve;
+
+fn main() -> Result<(), Error> {
+    let reader = std::io::BufReader::new(std::io::stdin());
+    let mut buffer = String::new();
+    let mut tokens = cses::utils::io::load_all_tokens(reader, &mut buffer).unwrap();
+    let n: u64 = cses::utils::io::get_token(&mut tokens).unwrap();
+    let mut output = String::new();
     match solve(n) {
         Some((a, b)) => {
             writeln!(output, "YES").unwrap();
@@ -24,4 +28,5 @@ fn main() {
         None => writeln!(output, "NO").unwrap(),
     }
     println!("{}", output);
+    Ok(())
 }
