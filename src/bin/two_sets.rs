@@ -5,27 +5,29 @@
  */
 
 use std::fmt::Write;
+use std::io::BufReader;
 
 use anyhow::{Error, Result};
 
 use cses::solutions::two_sets::solve;
+use cses::utils::io::{get_token, load_tokens};
 
 fn main() -> Result<(), Error> {
-    let reader = std::io::BufReader::new(std::io::stdin());
+    let reader = BufReader::new(std::io::stdin());
     let mut buffer = String::new();
-    let mut tokens = cses::utils::io::load_all_tokens(reader, &mut buffer).unwrap();
-    let n: u64 = cses::utils::io::get_token(&mut tokens).unwrap();
+    let mut tokens = load_tokens(reader, &mut buffer)?;
+    let n: u64 = get_token(&mut tokens)?;
     let mut output = String::new();
     match solve(n) {
         Some((a, b)) => {
-            writeln!(output, "YES").unwrap();
-            writeln!(output, "{}", a.len()).unwrap();
+            writeln!(output, "YES")?;
+            writeln!(output, "{}", a.len())?;
             a.iter().for_each(|e| write!(output, "{} ", e).unwrap());
-            writeln!(output, "\n{}", b.len()).unwrap();
+            writeln!(output, "\n{}", b.len())?;
             b.iter().for_each(|e| write!(output, "{} ", e).unwrap());
             writeln!(output).unwrap();
         }
-        None => writeln!(output, "NO").unwrap(),
+        None => writeln!(output, "NO")?,
     }
     println!("{}", output);
     Ok(())

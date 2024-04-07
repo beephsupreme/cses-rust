@@ -4,20 +4,26 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
+use std::io::BufReader;
+
+use anyhow::Result;
 use log::info;
 
 use cses::solutions::two_sets::solve;
 use cses::utils::integration_setup::get_test_filenames;
-use cses::utils::io::file_to_int;
+use cses::utils::io::{get_token, load_all_tokens};
 
 #[cfg(test)]
 #[test]
-fn integration_01() {
+fn two_sets_integration() -> Result<()> {
     env_logger::init();
     let (questions, _) = get_test_filenames("two_sets");
-    (0..questions.len()).for_each(|i| {
-        info!("{}: {}", i + 1, questions[i]);
-        let n: u64 = file_to_int(&questions[i]);
+    for (i, question) in questions.iter().enumerate() {
+        info!("{}: {}", i + 1, question);
+        let mut q_reader = BufReader::new(std::fs::File::open(question)?);
+        let mut q_buffer: String = String::new();
+        let mut q_tokens = load_all_tokens(&mut q_reader, &mut q_buffer)?;
+        let n: u64 = get_token(&mut q_tokens)?;
         if let Some((a, b)) = solve(n) {
             assert_eq!(n, (a.len() + b.len()) as u64);
             assert_eq!(
@@ -28,5 +34,6 @@ fn integration_01() {
         } else {
             assert!(n % 4 == 1 || n % 4 == 2);
         }
-    });
+    }
+    Ok(())
 }
