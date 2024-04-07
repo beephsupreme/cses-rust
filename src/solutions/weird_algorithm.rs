@@ -20,7 +20,7 @@ const VALID_RANGE: RangeInclusive<u64> = 1..=1_000_000;
 /// The time complexity of this solution is O(n).
 /// The space complexity of this solution is O(1) because the vector is pre-allocated. Otherwise, it would be O(n).
 pub fn solve(mut n: u64) -> Result<Vec<u64>, CsesError> {
-    if !(VALID_RANGE).contains(&n) {
+    if !VALID_RANGE.contains(&n) {
         let msg = format!(
             "n is {} but expected {} ≤ n ≤ {}",
             n,

@@ -7,14 +7,14 @@
 use log::info;
 
 use cses::solutions::chessboard_and_queens::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::{file_to_int, file_to_vector_vector_bool};
 
 #[cfg(test)]
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, answers) = setup("chessboard_and_queens");
+    let (questions, answers) = get_test_filenames("chessboard_and_queens");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let b: Vec<Vec<bool>> = file_to_vector_vector_bool(&questions[i]);

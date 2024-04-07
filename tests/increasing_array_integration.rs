@@ -7,13 +7,13 @@
 use log::info;
 
 use cses::solutions::increasing_array::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::{file_to_int, file_to_string};
 
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, answers) = setup("increasing_array");
+    let (questions, answers) = get_test_filenames("increasing_array");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let question: String = file_to_string(&questions[i]);

@@ -7,14 +7,14 @@
 use log::info;
 
 use cses::solutions::two_sets::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::file_to_int;
 
 #[cfg(test)]
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, _) = setup("two_sets");
+    let (questions, _) = get_test_filenames("two_sets");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let n: u64 = file_to_int(&questions[i]);

@@ -8,7 +8,7 @@ use std::fs;
 
 use log::info;
 
-pub fn setup(p: &str) -> (Vec<String>, Vec<String>) {
+pub fn get_test_filenames(p: &str) -> (Vec<String>, Vec<String>) {
     info!("integration_setup reading data/{} directory", p);
     let paths = fs::read_dir(format!("data/{}/", p)).unwrap();
     let mut questions: Vec<String> = Vec::new();

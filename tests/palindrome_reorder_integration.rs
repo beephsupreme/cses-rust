@@ -7,14 +7,14 @@
 use log::info;
 
 use cses::solutions::palindrome_reorder::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::file_to_string;
 
 #[cfg(test)]
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, answers) = setup("palindrome_reorder");
+    let (questions, answers) = get_test_filenames("palindrome_reorder");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let q = file_to_string(&questions[i]);

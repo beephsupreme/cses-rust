@@ -7,14 +7,14 @@
 use log::info;
 
 use cses::solutions::gray_code::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::{file_to_int, file_to_string};
 
 #[cfg(test)]
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, answers) = setup("gray_code");
+    let (questions, answers) = get_test_filenames("gray_code");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let n: u64 = file_to_int(&questions[i]);

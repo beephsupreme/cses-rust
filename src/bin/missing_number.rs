@@ -7,7 +7,7 @@
 use anyhow::Error;
 
 use cses::solutions::missing_number::solve;
-use cses::utils::io::{get_token, get_vector_from_tokens, load_all_tokens};
+use cses::utils::io::{get_token, get_vector, load_all_tokens};
 
 fn main() -> Result<(), Error> {
     // let f = std::fs::File::open("data/missing_number/test_input_003.txt")?;
@@ -17,7 +17,7 @@ fn main() -> Result<(), Error> {
     let mut buffer: String = String::new();
     let mut tokens = load_all_tokens(reader, &mut buffer)?;
     let n: u64 = get_token(&mut tokens)?;
-    let v: Vec<u64> = get_vector_from_tokens(&mut tokens)?;
+    let v: Vec<u64> = get_vector(&mut tokens)?;
     let r: u64 = solve(n, v)?;
     println!("{}", r);
     Ok(())

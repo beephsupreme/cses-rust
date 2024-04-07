@@ -4,11 +4,19 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
-use cses::solutions::two_knights::solve;
-use cses::utils::io::{get_int, vector_to_string};
+use std::io::BufReader;
 
-fn main() {
-    let n: i64 = get_int().unwrap();
-    let v: Vec<i64> = solve(n);
+use anyhow::Error;
+
+use cses::solutions::two_knights::solve;
+use cses::utils::io::{get_token, load_tokens, vector_to_string};
+
+fn main() -> Result<(), Error> {
+    let mut buffer = String::new();
+    let mut reader = BufReader::new(std::io::stdin());
+    let mut tokens = load_tokens(&mut reader, &mut buffer)?;
+    let n: i64 = get_token(&mut tokens).unwrap();
+    let v: Vec<i64> = solve(n)?;
     print!("{}", vector_to_string(v, Some("\n")));
+    Ok(())
 }

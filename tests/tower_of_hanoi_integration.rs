@@ -7,14 +7,14 @@
 use log::info;
 
 use cses::solutions::tower_of_hanoi::solve;
-use cses::utils::integration_setup::setup;
+use cses::utils::integration_setup::get_test_filenames;
 use cses::utils::io::{file_to_int, file_to_string};
 
 #[cfg(test)]
 #[test]
 fn integration_01() {
     env_logger::init();
-    let (questions, answers) = setup("tower_of_hanoi");
+    let (questions, answers) = get_test_filenames("tower_of_hanoi");
     (0..questions.len()).for_each(|i| {
         info!("{}: {}", i + 1, questions[i]);
         let n: u8 = file_to_int(&questions[i]);

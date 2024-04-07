@@ -112,7 +112,7 @@ where
     Ok(buffer.split_ascii_whitespace())
 }
 
-pub fn get_vector_from_tokens<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> Result<Vec<T>> {
+pub fn get_vector<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> Result<Vec<T>> {
     let mut v: Vec<T> = Vec::new();
     for token in tokens.by_ref() {
         match token.parse::<T>() {
