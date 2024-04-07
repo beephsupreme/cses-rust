@@ -4,6 +4,7 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
+use std::fs::File;
 use std::io::BufReader;
 
 use anyhow::Result;
@@ -17,11 +18,11 @@ use cses::utils::io::{get_token, get_vector, load_all_tokens};
 #[test]
 fn two_knights_integration() -> Result<()> {
     env_logger::init();
-    let (questions, answers) = get_test_filenames("two_knights");
+    let (questions, answers) = get_test_filenames("missing_number");
     for i in 0..questions.len() {
         info!("{}: {}", i + 1, questions[i]);
-        let mut q_reader = BufReader::new(std::fs::File::open(&questions[i])?);
-        let mut a_reader = BufReader::new(std::fs::File::open(&answers[i])?);
+        let mut q_reader = BufReader::new(File::open(&questions[i])?);
+        let mut a_reader = BufReader::new(File::open(&answers[i])?);
         let mut q_buffer: String = String::new();
         let mut a_buffer: String = String::new();
         let mut q_tokens = load_all_tokens(&mut q_reader, &mut q_buffer)?;

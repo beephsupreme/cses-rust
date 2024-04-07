@@ -4,6 +4,7 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
+use std::fs::File;
 use std::io::BufReader;
 
 use anyhow::Result;
@@ -20,7 +21,7 @@ fn two_sets_integration() -> Result<()> {
     let (questions, _) = get_test_filenames("two_sets");
     for (i, question) in questions.iter().enumerate() {
         info!("{}: {}", i + 1, question);
-        let mut q_reader = BufReader::new(std::fs::File::open(question)?);
+        let mut q_reader = BufReader::new(File::open(question)?);
         let mut q_buffer: String = String::new();
         let mut q_tokens = load_all_tokens(&mut q_reader, &mut q_buffer)?;
         let n: u64 = get_token(&mut q_tokens)?;
