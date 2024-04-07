@@ -3,111 +3,19 @@
  * Licensed under the MIT license (http://opensource.org/licenses/MIT)
  * This file may not be copied, modified, or distributed except according to those terms.
  */
-use std::{any, fs};
-use std::io::{BufReader, Read, Write};
 use std::str::{FromStr, SplitAsciiWhitespace};
 
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, Result};
+
 use crate::utils::error::CsesError;
 
-
-
-/// Reads a line with a BufReader and returns a vector of bytes.
-/// # Arguments
-/// * `reader` - A BufReader.
-/// # Returns
-/// * `Result` containing a Vec<u8> or an error.
-/// # Examples
-///```no_run
-///
-/// let reader = std::io::BufReader::new(std::io::stdin());
-/// let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
-///
-/// let reader = std::io::Cursor::new("42");
-/// let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
-///
-///  let f = std::fs::File::open("path/filename.txt").unwrap();
-///  let reader = std::io::BufReader::new(f);
-///  let output: Vec<u8> = cses::utils::io::get_bytes(reader).unwrap();
-///```
-pub fn get_bytes<R>(mut reader: R) -> Result<Vec<u8>>
-    where R: std::io::BufRead {
-    let mut input = String::new();
-    let mut output: Vec<u8> = Vec::new();
-    reader.read_line(&mut input)?;
-    write!(output, "{}", input)?;
-    Ok(output)
-}
-
-/// # get_int()
-/// Reads a line from standard input and parses it into a type T.
-/// # Returns
-/// The result of parsing the input into a type T or an error.
-pub fn get_int<T: FromStr>(v: Vec<u8>) -> Result<T> {
-    let s = String::from_utf8(v)?;
-    match s.trim().parse::<T>() {
-        Ok(r) => Ok(r),
-        Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_int({:?})", s))),
-    }
-}
-
-/// # get_vector()
-/// Reads a line from standard input and parses it into a vector of type T.
-/// # Returns
-/// The result of parsing the input into a vector of type T or an error.
-pub fn get_vector<T: FromStr>() -> Result<Vec<T>> {
-    let mut input = String::with_capacity(4096);
-    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_vector: Could not read from stdin")?;
-    let mut v: Vec<T> = Vec::new();
-    let tokens = input.split_ascii_whitespace();
-    for token in tokens {
-        match token.parse::<T>() {
-            Ok(k) => v.push(k),
-            Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::get_vector: {}", token.to_string()))),
-        }
-    }
-    Ok(v)
-}
-
-/// # get_string()
-/// Reads a line from standard input and returns a string.
-/// # Returns
-/// A Result contining a trimmed string or an error.
-pub fn get_string() -> Result<String> {
-    let mut input = String::new();
-    std::io::stdin().read_line(&mut input).context("cses::utils::io::get_string: Could not read from stdin")?;
-    Ok(input.trim().to_string())
-}
-
-/// # string_to_vector()
-/// Converts a string into a vector of type T.
-/// # Arguments
-/// * `input` - A string to be converted into a vector of type T.
-/// # Returns
-/// A Result containing a vector of type T or an error.
-pub fn string_to_vector<T: FromStr>(input: String) -> Result<Vec<T>> {
-    let tokens = input.split_ascii_whitespace();
-    let mut v: Vec<T> = Vec::new();
-    for token in tokens {
-        match token.parse::<T>() {
-            Ok(k) => v.push(k),
-            Err(_) => bail!(CsesError::ParseError(format!("cses::utils::io::string_to_vector: {}", token.to_string()))),
-        }
-    }
-    Ok(v)
-}
-
-/// # vector_to_string()
 /// Converts a vector of type T to a string.
 /// # Arguments
 /// * `v` - A vector of type T.
 /// * `sep` - An optional separator string.
 /// # Returns
 /// A string containing the elements of the vector separated by the separator.
-pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
-    where
-        T: ToString,
-{
+pub fn vector_to_string<T: ToString>(v: Vec<T>, sep: Option<&str>) -> String {
     match sep {
         Some(sep) => v
             .into_iter()
@@ -118,7 +26,6 @@ pub fn vector_to_string<T>(v: Vec<T>, sep: Option<&str>) -> String
     }
 }
 
-/// # get_tuple_vector()
 /// Reads n lines from standard input and parses them into a vector of tuples of type (u64, u64).
 /// # Arguments
 /// * `n` - The number of lines to read.
@@ -158,105 +65,81 @@ pub fn get_vector_vector_bool() -> Vec<Vec<bool>> {
     v
 }
 
-/// # file_to_vector_vector_bool()
-/// Reads a file and parses it into a vector of vectors of bool.
-/// # Arguments
-/// * `path` - A string representing the path to the file.
-/// # Returns
-/// A Result containing a vector of vectors of bool or an error.
-pub fn file_to_vector_vector_bool(path: &str) -> Vec<Vec<bool>> {
-    let mut v: Vec<Vec<bool>> = Vec::new();
-    let mut b: Vec<bool> = Vec::new();
-    let input: String = fs::read_to_string(path).unwrap();
-    for line in input.lines() {
-        let chars = line.chars();
-        for c in chars {
-            b.push(c == '.');
-        }
-        v.push(b.clone());
-        b.clear();
-    }
-    v
-}
-
-/// # file_to_string()
-/// Reads a file and returns a string.
-/// # Arguments
-/// * `path` - A string representing the path to the file.
-/// # Returns
-/// A Result containing a string or an error.
-pub fn file_to_string(path: &str) -> String {
-    fs::read_to_string(path).unwrap().trim().to_string()
-}
-
-/// # file_to_vector()
-/// Reads a file and parses it into a vector of type T.
-/// # Arguments
-/// * `path` - A string representing the path to the file.
-/// # Returns
-/// A Result containing a vector of type T or an error.
-pub fn file_to_vector<T: FromStr>(path: &str) -> Vec<T> {
-    fs::read_to_string(path)
-        .unwrap()
-        .split_ascii_whitespace()
-        .map(|s| {
-            s.parse::<T>()
-                .ok()
-                .unwrap_or_else(|| panic!("file_to_vector: parse fail"))
-        })
-        .collect()
-}
-
-/// # file_to_int()
-/// Reads a file and parses it into a type T.
-/// # Arguments
-/// * `path` - A string representing the path to the file.
-/// # Returns
-/// A Result containing a type T or an error.
-pub fn file_to_int<T: FromStr>(path: &str) -> T {
-    fs::read_to_string(path)
-        .unwrap()
-        .trim()
-        .parse::<T>()
-        .ok()
-        .unwrap_or_else(|| panic!("file_to_int: parse fail"))
-}
-
-/// # get_token()
 /// Parses a token into a type T.
 /// # Arguments
 /// * `tokens` - A mutable reference to a SplitAsciiWhitespace.
 /// # Returns
 /// A Result containing a type T or an error.
-#[allow(clippy::expect_fun_call)]
-pub fn get_token<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> T {
+pub fn get_token<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> Result<T> {
     if let Some(token) = tokens.next() {
-        return token
-            .parse::<T>()
-            .ok()
-            .expect(format!("\"{}\" -> {}", token, any::type_name::<T>()).as_str());
+        match token.parse::<T>() {
+            Ok(r) => Ok(r),
+            Err(_) => bail!(CsesError::ParseError(format!("get_token: {}", token))),
+        }
     } else {
-        panic!("get_token: expected Some, got None");
+        bail!(CsesError::ParseError(
+            "get_token(): expected Some, got None".to_string()
+        ));
     }
 }
 
-/// # load_tokens()
-/// Reads from standard input and returns a SplitAsciiWhitespace.
+/// Reads all from standard input and returns a SplitAsciiWhitespace.
+/// Must send EOF (Ctrl-D Mac & Linux, Ctrl+Z Windows) to signal the end of input when using stdin as Reader.
 /// # Arguments
+/// * `reader` - A BufReader.
 /// * `b` - A mutable reference to a string.
 /// # Returns
 /// A Result containing a SplitAsciiWhitespace or an error.
-pub fn load_tokens(b: &mut String) -> SplitAsciiWhitespace {
-    let mut reader = BufReader::new(std::io::stdin());
-    reader
-        .read_to_string(b)
-        .expect("load_tokens: failed to read from stdin");
-    b.split_ascii_whitespace()
+pub fn load_all_tokens<R>(mut reader: R, buffer: &mut String) -> Result<SplitAsciiWhitespace>
+where
+    R: std::io::BufRead,
+{
+    reader.read_to_string(buffer)?;
+    Ok(buffer.split_ascii_whitespace())
+}
+
+/// Reads a line standard input and returns a SplitAsciiWhitespace.
+/// # Arguments
+/// * `reader` - A BufReader.
+/// * `buffer` - A mutable reference to a string.
+/// # Returns
+/// A Result containing a SplitAsciiWhitespace or an error.
+pub fn load_tokens<R>(mut reader: R, buffer: &mut String) -> Result<SplitAsciiWhitespace>
+where
+    R: std::io::BufRead,
+{
+    reader.read_line(buffer)?;
+    Ok(buffer.split_ascii_whitespace())
+}
+
+pub fn get_vector_from_tokens<T: FromStr>(tokens: &mut SplitAsciiWhitespace) -> Result<Vec<T>> {
+    let mut v: Vec<T> = Vec::new();
+    for token in tokens.by_ref() {
+        match token.parse::<T>() {
+            Ok(r) => v.push(r),
+            Err(_) => bail!(CsesError::ParseError(format!(
+                "vector_from_tokens: {}",
+                token
+            ))),
+        }
+    }
+    Ok(v)
 }
 
 #[cfg(test)]
 mod tests {
-    // use super::*;
+    use super::*;
+
+    #[test]
+    fn test_vector_to_string() {
+        let v = vec![
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+        ];
+        let u = "a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z"
+            .to_string();
+        assert_eq!(vector_to_string(v, Some(", ")), u);
+    }
 
     // #[test]
     // fn test_string_to_vector() {

@@ -5,15 +5,18 @@
  */
 
 use anyhow::Error;
+
 use cses::solutions::weird_algorithm::solve;
-use cses::utils::io::{get_bytes, get_int, vector_to_string};
+use cses::utils::io::{get_token, load_tokens, vector_to_string};
 
 /// Driver for the "Weird Algorithm" problem https://cses.fi/problemset/task/1068
 fn main() -> Result<(), Error> {
     let reader = std::io::BufReader::new(std::io::stdin());
-    let input: Vec<u8> = get_bytes(reader)?;
-    let n: u64 = get_int(input)?;
+    let mut buffer: String = String::new();
+    let mut tokens = load_tokens(reader, &mut buffer)?;
+    let n: u64 = get_token(&mut tokens)?;
     let r: Vec<u64> = solve(n)?;
-    println!("{}", vector_to_string(r, Some(" ")));
+    let s: String = vector_to_string(r, Some(" "));
+    println!("{}", s);
     Ok(())
 }

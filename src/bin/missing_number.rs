@@ -4,26 +4,21 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
-use cses::solutions::missing_number::solve;
-use cses::utils::io::{get_int, get_vector};
+use anyhow::Error;
 
-fn main() {
-    let n: u64 = match get_int() {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("{}", e);
-            return;
-        }
-    };
-    let v: Vec<u64> = match get_vector() {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("{}", e);
-            return;
-        }
-    };
-    match solve(n, v) {
-        Ok(v) => println!("{}", v),
-        Err(e) => eprintln!("{}", e),
-    }
+use cses::solutions::missing_number::solve;
+use cses::utils::io::{get_token, get_vector_from_tokens, load_all_tokens};
+
+fn main() -> Result<(), Error> {
+    // let f = std::fs::File::open("data/missing_number/test_input_003.txt")?;
+    // let reader = std::io::BufReader::new(f);
+    let reader = std::io::BufReader::new(std::io::stdin());
+    // let reader = std::io::Cursor::new("42");
+    let mut buffer: String = String::new();
+    let mut tokens = load_all_tokens(reader, &mut buffer)?;
+    let n: u64 = get_token(&mut tokens)?;
+    let v: Vec<u64> = get_vector_from_tokens(&mut tokens)?;
+    let r: u64 = solve(n, v)?;
+    println!("{}", r);
+    Ok(())
 }
