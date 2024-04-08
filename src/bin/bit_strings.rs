@@ -5,7 +5,6 @@
  */
 
 use cses::solutions::bit_strings::solve;
-use cses::utils::io::get_int;
 
 fn main() {
     let n: u64 = get_int().unwrap();

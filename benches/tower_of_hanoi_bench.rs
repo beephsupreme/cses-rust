@@ -6,10 +6,12 @@
 
 use criterion::{black_box, Criterion, criterion_group, criterion_main};
 
-use cses::solutions::tower_of_hanoi::solve;
+use cses::solutions::tower_of_hanoi::tower_of_hanoi_solution;
 
 pub fn tower_of_hanoi_bench(c: &mut Criterion) {
-    c.bench_function("tower_of_hanoi(8)", |b| b.iter(|| solve(black_box(8))));
+    c.bench_function("tower_of_hanoi(8)", |b| {
+        b.iter(|| tower_of_hanoi_solution(black_box(8)))
+    });
 }
 
 criterion_group!(benches, tower_of_hanoi_bench);

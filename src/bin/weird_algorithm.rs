@@ -4,6 +4,8 @@
  * This file may not be copied, modified, or distributed except according to those terms.
  */
 
+use std::io::BufReader;
+
 use anyhow::Error;
 
 use cses::solutions::weird_algorithm::solve;
@@ -11,7 +13,7 @@ use cses::utils::io::{get_token, load_tokens, vector_to_string};
 
 /// Driver for the "Weird Algorithm" problem https://cses.fi/problemset/task/1068
 fn main() -> Result<(), Error> {
-    let reader = std::io::BufReader::new(std::io::stdin());
+    let reader = BufReader::new(std::io::stdin());
     let mut buffer: String = String::new();
     let mut tokens = load_tokens(reader, &mut buffer)?;
     let n: u64 = get_token(&mut tokens)?;
